@@ -1,0 +1,277 @@
+@startuml
+
+Abstract Class Pessoa
+{
+    - cpf: String
+    - endereco: String
+    - nome: String
+    - telefone: String
+    + Pessoa(String nome, String cpf, String endereco, String, telefone)
+    + getCpf(): String
+    + getEndereco(): String
+    + getNome(): String
+    + getTelefone():String
+    + setCpf(cpf: String): void
+    + setNome(nome: String): void
+    + setEndereco(endereco: String): void
+    + setTelefone(telefone: String): void
+}
+
+class Enfermeiro
+{
+    - matricula: String
+    + Enfermeiro(nome: String, cpf: String, endereco: String, telefone: String, matricula: String)
+    + getMatricula():String
+    + setMatricula(matricula: String): void
+    + toString(): String
+}
+
+class Medico
+{
+    - matricula: String
+    - especialidade: String
+    + getEspecialidade():String
+    + setEspecialidade(especialidade: String): void
+    + getMatricula():String
+    + setMatricula(matricula: String): void
+    + toString(): String
+}
+
+class Paciente
+{
+    - causa: String
+    + Paciente(nome: String, cpf: String, endereco: String, telefone: String, causa: String)
+    + getCausa(): String
+    + setCausa(): void
+    + toString(): String
+}
+
+Pessoa <|-- Enfermeiro
+Pessoa <|-- Medico
+Pessoa <|-- Paciente
+
+Abstract class Leito
+{
+    - paciente: Pessoa
+    + Leito()
+    + Leito(paciente: Pessoa)
+    + getCustos(): float
+    + getPaciente(): Pessoa
+    + setPaciente(paciente: Pessoa): void
+}
+
+class Enfermaria
+{
+    - custo: Float
+    - enfermeiro: Pessoa
+    + Enfermaria()
+    + Enfermaria(paciente: Pessoa)
+    + getCustos(): float
+    + getEnfermeiro(): Pessoa
+    + setEnfermeiro(enfermeiro: Pessoa): void
+}
+
+class UTI
+{
+    - custo: Float
+    - medico: Pessoa
+    + UTI()
+    + UTI(paciente: Pessoa)
+    + getCustos(): float
+    + getMedico(): Pessoa
+    + setMedico(enfermeiro: Pessoa): void
+}
+
+Leito <|-- UTI
+Leito <|-- Enfermaria
+Leito *-- Paciente
+
+class ModelPessoa
+{
+    - pessoas: ArrayList<Pessoa>
+    + ModelPessoa()
+    + ModelPessoa(pessoas: ArrayList<Pessoa>)
+    + getPessoas(): ArrayList<Pessoa>
+    + getQuantidadePessoas: int
+}
+
+class ControllerPaciente
+{
+    - modelPaciente: ModelPessoa
+    + ControllerPaciente()
+    + addPaciente(nome :String, cpf:String, endereco:String, telefone:String, causa:String): void
+    + getPaciente(nome:String): Pessoa
+    + listarPacientes(): void
+    + removePaciente(nome String): void
+}
+
+class ViewPaciente
+{
+    - controllerPaciente: ControllerPaciente
+    + ViewPaciente(controllerPaciente: ControllerPaciente)
+    + menuPaciente(): void
+}
+
+class ControllerMedico
+{
+    - modelMedico:ModelPessoa
+    + ControllerMedico(modelMedico: ModelPessoa)
+    + addMedico(nome :String, cpf:String, endereco:String, telefone:String, matricula: String, especialidade: String)
+    + getMedico(nomeMedico: String): Pessoa
+    + listarMedicos(): void
+    + removeMedico(nomeMedico: String): void
+}
+
+class ViewMedico
+{
+    - controllerMedico: ControllerMedico
+    + ViewMedico(ControllerMedico)
+    + menuMedico(): void
+}
+
+class ControllerEnfermeiro
+{
+    - modelEnfermeiro:ModelPessoa
+    + ControllerEnfermeiro(modelEnfermeiro: ModelPessoa)
+    + addEnfermeiro(nome :String, cpf:String, endereco:String, telefone:String, matricula: String)
+    + getEnfermeiro(nomeEnfermeiro: String): Pessoa
+    + listarEnfermeiros(): void
+    + removeEnfermeiro(nomeEnfermeiro: String): void
+}
+
+class ViewEnfermeiro
+{
+    - controllerEnfermeiro: ControllerEnfermeiro
+    + ViewEnfermeiro(controllerEnfermeiro: ControllerEnfermeiro)
+    + menuEnfermeiro(): void
+}
+
+class ModelLeito
+{
+    - controllerEnfermeiro: ControllerEnfermeiro
+    - controllerMedico: ControllerMedico
+    - controllerPaciente: ControllerPaciente
+    - leitos: ArrayList<Leito>
+    + ModelLeito(controllerPaciente: ControllerPaciente, controllerEnfermeiro: ControllerEnfermeiro, controllerMedico: ControllerMedico)
+    + getControllerEnfermeiro(): ControllerEnfermeiro
+    + getControllerPaciente(): ControllerPaciente
+    + getControllerMedico(): ControllerMedico
+    + setControllerEnfermeiro(): void
+    + setControllerMedico(): void
+    + setControllerPaciente(): void
+    + setLeitos(leitos: ArrayList<Leito>): void
+}
+
+class ControllerLeito
+{
+    - modelLeito: ModelLeito
+    + ControllerLeito(modelLeito: ModelLeito)
+    + adicionarPacienteLeito(nomePaciente): void
+    + criarLeitoEnfermaria(nomePaciente: String, nomeEnfermeiro: String): void
+    + criarLeitoUTI(nomePaciente: String, nomeMedicoo: String): void
+    + listarEnfermeiros(): void
+    + listarMedicos(): void
+    + listarPacientes(): void
+    + listarLeitos(): void
+    + removePacienteLeito(nomePaciente: String): void
+}
+
+class ViewLeito
+{
+    - controllerLeito: ControllerLeito
+    + ViewLeito(controllerLeito: ControllerLeito)
+    + menuLeito(): void
+}
+
+Abstract class Hospital
+{
+    - modelEnfermeiros: ModelPessoa
+    - modelMedicos: ModelPessoa
+    - modelPacientes: ModelPessoa
+    - modelLeitos: ModelLeito
+    - nomeHospital: String
+    + Hospital(nomeHospital: String)
+    + getModelEnfermeiros(): ModelPessoa
+    + getModelMedicos(): ModelPessoa
+    + getModelPacientes(): ModelPessoa
+    + getModelLeitos(): ModelLeito
+    + getNomeHospital(): String
+    + setModelEnfermeiros(modelEnfermeiros: ModelPessoa): void
+    + setModelMedicos(modelMedicos: ModelPessoa): void
+    + setModelPacientes(modelPacientes: ModelPessoa): void
+    + setModelLeito(modelLeitos: ModelLeito): void
+    + setNomeHospital(nomeHospital: String): void
+    + toString(): String
+}
+
+class HospitalCampanha
+{
+    + HospitalCampanha(nomeHospital: String)
+    + toString(): String
+}
+
+class HospitalFixo
+{
+    + HospitalFixo(nomeHospital: String)
+        + toString(): String
+}
+
+class ModelHospital
+{
+    - hospitais: ArrayList<Hospital>
+    + ModelHospital()
+    + getHospital(): ArrayList<Hospital>
+}
+
+class ControllerHospital
+{
+    - modelHospital: ModelHospital
+    + ControllerHospital(modelHospital: ModelHospital)
+    + addHospitalCampanha(nomeHospital: String): void
+    + addHospitalFixo(nomeHospital: String): void
+    + getHospital(nomeHospital: String): Hospital
+    + listarHospitais(): void
+    + quantidadePacientes(hospital: Hospital): int
+    + relatorioCustosDiarios(hospital: Hospital): float
+    + relatorioLeitosLivres(hospital: Hospital): int
+    + removeHospital(nomeHospital: String): void
+}
+
+class ViewHospital
+{
+    - controllerHospital: ControllerHospital
+    + ViewHospital(controllerHospital :ControllerHospital)
+    + menu(): void
+    + menuGerenciarHospitais(hospital: Hospital): void
+}
+
+ModelHospital *-- Hospital
+ModelLeito *-- Leito
+ModelPessoa *-- Medico
+ModelPessoa *-- Paciente
+ModelPessoa *-- Enfermeiro
+ControllerPaciente *-- ModelPessoa
+ViewPaciente *-- ControllerPaciente
+ControllerMedico *-- ModelPessoa
+ViewMedico *-- ControllerMedico
+ControllerEnfermeiro *-- ModelPessoa
+ViewEnfermeiro *-- ControllerEnfermeiro
+ControllerLeito *-- ModelLeito
+ViewLeito *-- ControllerLeito
+ControllerHospital *-- ModelHospital
+ViewHospital *-- ControllerHospital
+
+Hospital <|-- HospitalCampanha
+Hospital <|-- HospitalFixo
+
+Hospital *--ModelPessoa
+Hospital *--ModelLeito
+
+ViewHospital o-- ViewLeito
+ViewHospital o-- ViewEnfermeiro
+ViewHospital o-- ViewMedico
+ViewHospital o-- ViewPaciente
+
+
+
+@enduml
